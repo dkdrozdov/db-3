@@ -11,8 +11,8 @@ $char password[50];
 
 int main()
 {
-    strcpy(name_of_bd, "students");
-    strcpy(user, "pmi-b1813");
+    strcpy(database_name, "students");
+    strcpy(user_name, "pmi-b1813");
     strcpy(password, "xdCz95b0/");
 
     printf("Trying to connect to database.\n");
