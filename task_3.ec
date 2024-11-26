@@ -28,7 +28,8 @@ void query(){
         from spj;
 
     printf("CODE: %ld\n", sqlca.sqlcode);
-    
+    printf("MESSAGE: %s\n", sqlca.sqlerrm.sqlerrmc);
+
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
     exec SQL open cursor1;
