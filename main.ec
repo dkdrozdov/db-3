@@ -7,6 +7,31 @@
 //
 //}
 
+enum success_code{
+    SUCCESS, FAILURE
+}
+
+int connect(char *database_name, char *user_name, char *password){
+    int success = SUCCESS;
+
+    printf("Trying to connect to database.\n");
+    EXEC SQL connect to :database_name user :user_name using :password;
+
+    if (sqlca.sqlcode < 0)
+    {
+        fprintf(stderr, "Error: %s\n%s", sqlca.sqlerrm.sqlerrmc, "Couldn't connect.");
+        success = FAILURE;
+    }
+    else
+        printf("Connected successfully!\n");
+
+    return success;
+}
+
+int disconnect(){
+
+}
+
 int main()
 {
     EXEC SQL begin declare section;
@@ -15,20 +40,8 @@ int main()
     char password[50] = "xdCz95b0/";
     EXEC SQL end declare section;
 
-    //strcpy(database_name, "students");
-    //strcpy(user_name, "pmi-b1813");
-    //strcpy(password, "xdCz95b0/");
-
-    printf("Trying to connect to database.\n");
-    EXEC SQL connect to :database_name user :user_name using :password;
-
-    if (sqlca.sqlcode < 0)
-    {
-        fprintf(stderr, "Error: %s\n%s", sqlca.sqlerrm.sqlerrmc, "Couldn't connect.");
+    if(connect(database_name, user_name, password)!=SUCCESS)
         exit(EXIT_FAILURE);
-    }
-    else
-        printf("Connected successfully!\n");
 
     printf("Disconnecting from database.\n");
     exec SQL disconnect;
