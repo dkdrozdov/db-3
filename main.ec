@@ -24,6 +24,10 @@ void task_1(){
         return;
     }
 
+    printf("%-7s\n", "count");
+    printf("%-7d\n", "count_products");
+    printf("Successfully finished request.\n");
+
     printf("Committing transaction.\n");
     exec SQL commit work;
 }
