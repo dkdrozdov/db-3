@@ -3,17 +3,21 @@
 #include <string.h>
 #include <stdbool.h>
 
-EXEC SQL begin declare section;
-char database_name[50];
-char user_name[50];
-char password[50];
-EXEC SQL end declare section;
+//void task_1(){
+//
+//}
 
 int main()
 {
-    strcpy(database_name, "students");
-    strcpy(user_name, "pmi-b1813");
-    strcpy(password, "xdCz95b0/");
+    EXEC SQL begin declare section;
+    char database_name[50] = "students";
+    char user_name[50] = "pmi-b1813";
+    char password[50] = "xdCz95b0/";
+    EXEC SQL end declare section;
+
+    //strcpy(database_name, "students");
+    //strcpy(user_name, "pmi-b1813");
+    //strcpy(password, "xdCz95b0/");
 
     printf("Trying to connect to database.\n");
     EXEC SQL connect to :database_name user :user_name using :password;
@@ -34,5 +38,5 @@ int main()
         exit(EXIT_FAILURE);
         }
     else
-        printf("Отсоединение от базы данных выполнено.\n");
+        printf("Disconnected successfully.\n");
 }
