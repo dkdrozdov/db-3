@@ -84,7 +84,7 @@ void query(){
         // Вывод данных
         printf("| %-9s |\n", amount);
 
-        exec SQL fetch result_cursor into :amount  // Извлечение данных из курсора.
+        exec SQL fetch result_cursor into :amount;  // Извлечение данных из курсора.
     }
 
     // Сообщение о пустом результате.
