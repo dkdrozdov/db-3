@@ -26,102 +26,99 @@ void print_sqlca()
  *          объем поставки, минимальный объем поставки красных 
  *          деталей поставщиком.
  */
-void query(){
-    // Объявление собственных переменных.
+void query() {
+
+    /* Объявление переменных для хранения результата запроса */
     exec SQL begin declare section;
     char n_izd[7];
+    int pves;
+    int mves;
     exec SQL end declare section;
 
-    // Начало транзакции.  
-    printf("Starting transaction.\n");
+    printf("Начало транзакции.\n");
     exec SQL begin work;
+    printf("Определение курсора.\n");
 
-    // Выполнение запроса с объявлением курсора.
-    printf("Trying to declare a cursor.\n");
-    exec SQL declare cursor1 cursor for
-        select spj.n_izd
-        from spj;
+    /* Запрос для определения курсора */
+    exec SQL declare cursor3 cursor for
+             select spj.n_izd, spj.kol*p.ves pves, b.mves
+             from spj
+             join p on p.n_det = spj.n_det
+             join (select spj.n_izd, min(spj.kol*p.ves) mves
+                   from spj
+                   join p on p.n_det = spj.n_det
+                   group by spj.n_izd
+                  ) b on spj.n_izd = b.n_izd
+             where spj.kol*p.ves > b.mves * 4
+             order by 1, 2;
 
-    // Обработка ошибок при объявлении курсора.
+    /* Проверка успешности определения курсора */
     if (sqlca.sqlcode < 0) {
-        fprintf(stderr, 
-            "Error: %s\n%s\n", 
-            sqlca.sqlerrm.sqlerrmc,
-            "Couldn't declare cursor.\nRollbacking transaction.");
+        Err(sqlca.sqlerrm.sqlerrmc, "Не удалось определить курсор.", false);
         exec SQL rollback work;
         return;
     }
 
-    // Открытие курсора.
-    printf("Cursor declared successfully.\nTrying to open cursor.\n");
-    exec SQL open cursor1;
+    printf("Курсор определен.\n\n");
 
-    // Обработка ошибок при открытии курсора.
+    /* Открытие курсора */
+    exec SQL open cursor3;
+
+    /* Проверка успешности открытия курсора */
     if (sqlca.sqlcode < 0) {
-        fprintf(stderr, 
-            "Error: %s\n%s\n", 
-            sqlca.sqlerrm.sqlerrmc,
-            "Couldn't open cursor.\nRollbacking transaction.");
+        Err(sqlca.sqlerrm.sqlerrmc, "Не удалось открыть курсор.", false);
         exec SQL rollback work;
         return;
     }
 
-    // Вывод результата.
-    printf("Cursor opened successfully.\n");
-    printf("Successfully finished query!\nQuery results:\n");
+    bool dataexist = false;
+    printf("Результат запроса:\n\n");
 
-    bool data_read = true;    // Получена ли хотя бы одна строка данных.
+    /* Извлечение и вывод данных */
+    while (1) {
+        exec SQL fetch cursor3 INTO :n_izd, :pves, :mves;
 
+        /* Проверка на конец выборки */
+        if (sqlca.sqlcode == SQLFOUND) break;
 
-
-    printf("Fetching...\n");
-    exec SQL fetch cursor1 into :n_izd; // Извлечение данных из курсора.
-
-    while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
-    {
-        // Обработка ошибок при открытии курсора.
+        /* Проверка на ошибку извлечения данных */
         if (sqlca.sqlcode < 0) {
-            fprintf(stderr, 
-                "Error: %s\n%s\n", 
-                sqlca.sqlerrm.sqlerrmc,
-                "Couldn't get data.\nRollbacking transaction.");
-            exec SQL close cursor1;
+            Err(sqlca.sqlerrm.sqlerrmc, "Не удалось получить данные.", false);
+            exec SQL close cursor3;
             exec SQL rollback work;
             return;
         }
 
-        // Вывод заголовка таблицы.
-        if(!data_read) printf("| %-9s |\n", "n_izd");
-        data_read = true;
+        /* Вывод заголовка таблицы */
+        if (!dataexist) {
+            printf("| %-7s | %-7s | %-7s |\n", "n_izd", "pves", "mves");
+            dataexist = true;
+        }
 
-        // Вывод данных
-        printf("| %-9s |\n", n_izd);
-
-        printf("Fetching...\n");
-        exec SQL fetch cursor1 into :n_izd;  // Извлечение данных из курсора.
+        /* Вывод данных */
+        printf("| %-7s | %-7d | %-7d |\n", n_izd, pves, mves);
     }
 
-    // Сообщение о пустом результате.
-    if(!data_read) printf("No rows found.\n");
+    /* Проверка, что данные найдены */
+    if (!dataexist) {
+        printf("Данных не найдено.\n");
+    }
 
-    // Закрытие курсора.
-    exec SQL close cursor1;
+    printf("\nВывод результата запроса завершен.\n");
 
-    // Обработка ошибок при закрытии курсора.
+    /* Закрытие курсора */
+    exec SQL close cursor3;
+
+    /* Проверка успешности закрытия курсора */
     if (sqlca.sqlcode < 0) {
-        fprintf(stderr, 
-            "Error: %s\n%s\n", 
-            sqlca.sqlerrm.sqlerrmc,
-            "Couldn't close cursor.\nRollbacking transaction.");
+        Err(sqlca.sqlerrm.sqlerrmc, "Не удалось закрыть курсор.", false);
         exec SQL rollback work;
         return;
     }
 
-    // Завершение транзакции.
-    printf("Committing transaction.\n");
+    printf("Завершение транзакции.\n\n");
     exec SQL commit work;
 }
-
 
 
 int main()
