@@ -25,11 +25,13 @@ int connect(){
 
     if (sqlca.sqlcode < 0)
     {
-        fprintf(stderr, "Error: %s\n%s", sqlca.sqlerrm.sqlerrmc, "Couldn't connect.");
+        fprintf(stderr, "Error: %s\n%s\n", sqlca.sqlerrm.sqlerrmc, "Couldn't connect.");
         success = FAILURE;
     }
     else
+    {
         printf("Connected successfully!\n");
+    }
 
     return success;
 }
@@ -40,7 +42,9 @@ int disconnect(){
 
 int main()
 {
-    if(connect()!=SUCCESS)
+    int connection_success = connect();
+
+    if(connection_success != SUCCESS)
         exit(EXIT_FAILURE);
 
     printf("Disconnecting from database.\n");
