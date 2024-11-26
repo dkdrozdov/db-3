@@ -19,15 +19,20 @@ int main()
     EXEC SQL connect to : database_name user_name : user_name using : password;
 
     if (sqlca.sqlcode < 0)
-        Err(sqlca.sqlerrm.sqlerrmc, "Couldn't connect.", true);
+    {
+        fprintf(stderr, "Error: %s\n%s", sqlca.sqlerrm.sqlerrmc, "Couldn't connect.");
+        exit(EXIT_FAILURE);
+    }
     else
         printf("Connected successfully!\n");
 
     printf("Disconnecting from database.\n");
     exec SQL disconnect;
 
-    if (sqlca.sqlcode < 0)
-        Err(sqlca.sqlerrm.sqlerrmc, "Couldn't disconnect.", true);
+    if (sqlca.sqlcode < 0){
+        fprintf(stderr, "Error: %s\n%s", sqlca.sqlerrm.sqlerrmc, "Couldn't disconnect.");
+        exit(EXIT_FAILURE);
+        }
     else
         printf("Отсоединение от базы данных выполнено.\n");
 }
