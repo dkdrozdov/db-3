@@ -3,9 +3,56 @@
 #include <string.h>
 #include <stdbool.h>
 
-//void task_1(){
-//
-//}
+void task_1(){
+    exec SQL begin declare section;
+    int count;
+    exec SQL end declare section;
+    
+    printf("Starting transaction.\n")
+    exec SQL begin work;
+    
+    exec SQL select count(distinct spj.n_izd)
+        into :count
+        from spj
+
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, "Error: %s\Couldn't execute request.\nRollbacking transaction.", sqlca.sqlerrm.sqlerrmc);
+        exec SQL rollback work;
+        return;
+    }
+
+    printf("Committing transaction.\n")
+    exec SQL commit work;
+}
+
+void menu(){
+    printf("Choose the task number (1-5): ");
+
+    int option = 0;
+    if(scanf("%d", &option) == 1 && option <= 5 && option >= 1){
+        printf("Task %d is chosen.\n");
+    }
+
+    switch(option){
+        case 1:
+            task_1();
+            break;
+        case 2:
+            task_1();
+            break;
+        case 3:
+            task_1();
+            break;
+        case 4:
+            task_1();
+            break;
+        case 5:
+            task_1();
+            break;
+        default:
+            printf("This task doesn't exist.\n");
+    }
+}
 
 int main()
 {
@@ -29,6 +76,8 @@ int main()
     }
     else
         printf("Connected successfully!\n");
+
+    menu();
 
     printf("Disconnecting from database.\n");
     exec SQL disconnect;
