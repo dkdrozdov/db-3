@@ -23,7 +23,7 @@ void task_1(){
         return;
     }
 
-    printf("Committing transaction.\n")
+    printf("Committing transaction.\n");
     exec SQL commit work;
 }
 
