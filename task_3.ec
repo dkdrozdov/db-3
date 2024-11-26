@@ -14,7 +14,7 @@
 void query(){
     // Объявление собственных переменных.
     exec SQL begin declare section;
-    char n_post[7];
+    char n_det[7];
     exec SQL end declare section;
 
     // Начало транзакции.  
@@ -24,7 +24,7 @@ void query(){
     // Выполнение запроса с объявлением курсора.
     printf("Trying to declare a cursor.\n");
     exec SQL declare cursor1 cursor for
-        select spj.n_post
+        select spj.n_det
         from spj;
         
     if (sqlca.sqlcode < 0) {
@@ -56,7 +56,7 @@ void query(){
 
     bool data_read = false;    // Получена ли хотя бы одна строка данных.
 
-    exec SQL fetch cursor1 into :n_post; // Извлечение данных из курсора.
+    exec SQL fetch cursor1 into :n_det; // Извлечение данных из курсора.
 
     while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
     {
@@ -72,13 +72,13 @@ void query(){
         }
 
         // Вывод заголовка таблицы.
-        if(!data_read) printf("| %-9s |\n", "n_post");
+        if(!data_read) printf("| %-9s |\n", "n_det");
         data_read = true;
 
         // Вывод данных
-        printf("| %-9s |\n", n_post);
+        printf("| %-9s |\n", n_det);
 
-        exec SQL fetch cursor1 into :n_post;  // Извлечение данных из курсора.
+        exec SQL fetch cursor1 into :n_det;  // Извлечение данных из курсора.
     }
 
     // Сообщение о пустом результате.
