@@ -52,9 +52,12 @@ void query() {
              where spj.kol*p.ves > b.mves * 4
              order by 1, 2;
 
-    /* Проверка успешности определения курсора */
+    // Обработка ошибок при совершении запроса.
     if (sqlca.sqlcode < 0) {
-        Err(sqlca.sqlerrm.sqlerrmc, "Не удалось определить курсор.", false);
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't execute query.\nRollbacking transaction.");
         exec SQL rollback work;
         return;
     }
@@ -64,9 +67,12 @@ void query() {
     /* Открытие курсора */
     exec SQL open cursor3;
 
-    /* Проверка успешности открытия курсора */
+    // Обработка ошибок при совершении запроса.
     if (sqlca.sqlcode < 0) {
-        Err(sqlca.sqlerrm.sqlerrmc, "Не удалось открыть курсор.", false);
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't execute query.\nRollbacking transaction.");
         exec SQL rollback work;
         return;
     }
@@ -82,9 +88,12 @@ void query() {
         if (sqlca.sqlcode == 100) break;
 
         /* Проверка на ошибку извлечения данных */
+        // Обработка ошибок при совершении запроса.
         if (sqlca.sqlcode < 0) {
-            Err(sqlca.sqlerrm.sqlerrmc, "Не удалось получить данные.", false);
-            exec SQL close cursor3;
+            fprintf(stderr, 
+                "Error: %s\n%s\n", 
+                sqlca.sqlerrm.sqlerrmc,
+                "Couldn't execute query.\nRollbacking transaction.");
             exec SQL rollback work;
             return;
         }
@@ -110,8 +119,12 @@ void query() {
     exec SQL close cursor3;
 
     /* Проверка успешности закрытия курсора */
+    // Обработка ошибок при совершении запроса.
     if (sqlca.sqlcode < 0) {
-        Err(sqlca.sqlerrm.sqlerrmc, "Не удалось закрыть курсор.", false);
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't execute query.\nRollbacking transaction.");
         exec SQL rollback work;
         return;
     }
