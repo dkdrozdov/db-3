@@ -3,11 +3,11 @@
 #include <string.h>
 #include <stdbool.h>
 
-// EXEC SQL begin declare section;
-$char database_name[50];
-$char user_name[50];
-$char password[50];
-// EXEC SQL end declare section;
+EXEC SQL begin declare section;
+char database_name[50];
+char user_name[50];
+char password[50];
+EXEC SQL end declare section;
 
 int main()
 {
