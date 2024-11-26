@@ -16,7 +16,9 @@ void task_1(){
         from spj;
 
     if (sqlca.sqlcode < 0) {
-        fprintf(stderr, "Error: %s\Couldn't execute request.\nRollbacking transaction.", sqlca.sqlerrm.sqlerrmc);
+        fprintf(stderr, 
+            "Error: %s\nCouldn't execute request.\nRollbacking transaction.\n", 
+            sqlca.sqlerrm.sqlerrmc);
         exec SQL rollback work;
         return;
     }
