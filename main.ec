@@ -10,10 +10,18 @@ void task_1(){
     
     printf("Starting transaction.\n");
     exec SQL begin work;
-    
-    exec SQL select count(distinct spj.n_izd)
-        into :count
-        from spj;
+
+    exec SQL select count(distinct spj.n_post)
+    into :count
+    from spj
+    where spj.n_izd in
+        (select j.n_izd
+        from j
+        where town in
+            (select p.town
+            from p
+            where cvet='Красный'));
+
 
     if (sqlca.sqlcode < 0) {
         fprintf(stderr, 
