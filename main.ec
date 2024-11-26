@@ -15,7 +15,7 @@ EXEC SQL end declare section;
 
 enum success_code{
     SUCCESS, FAILURE
-}
+};
 
 int connect(){
     int success = SUCCESS;
