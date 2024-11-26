@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define SQLFOUND 100
-
 /*      Задание 3. 
  *      Выполнить запрос:
  *          Найти поставщиков, имеющих поставки, объем которых 
@@ -53,9 +51,10 @@ void query(){
 
     bool data_read = true;    // Получена ли хотя бы одна строка данных.
 
+    printf("Fetching...\n");
     exec SQL fetch cursor1 into :amount; // Извлечение данных из курсора.
 
-    while(sqlca.sqlcode != SQLFOUND) // Проверка на достижение конца выборки.
+    while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
     {
         // Обработка ошибок при открытии курсора.
         if (sqlca.sqlcode < 0) {
@@ -75,6 +74,7 @@ void query(){
         // Вывод данных
         printf("| %-9s |\n", amount);
 
+        printf("Fetching...\n");
         exec SQL fetch cursor1 into :amount;  // Извлечение данных из курсора.
     }
 
