@@ -27,14 +27,14 @@ void task_1(){
         fprintf(stderr, 
             "Error: %s\n%s\n", 
             sqlca.sqlerrm.sqlerrmc,
-            "Couldn't execute request.\nRollbacking transaction.");
+            "Couldn't execute query.\nRollbacking transaction.");
         exec SQL rollback work;
         return;
     }
 
-    printf("%-7s\n", "count");
-    printf("%-7d\n", count);
-    printf("Successfully finished request.\n");
+    printf("Successfully finished query! Query results:\n");
+    printf("| %-9s |\n", "count");
+    printf("| %-9d |\n", count);
 
     printf("Committing transaction.\n");
     exec SQL commit work;
