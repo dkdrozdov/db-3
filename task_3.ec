@@ -17,7 +17,8 @@ void query(){
     int kol;
     exec SQL end declare section;
 
-    // Начало транзакции.  
+    // Начало транзакции.      
+    exec SQL begin work;
     // printf("Starting transaction.\n");
     // exec SQL begin work;
 
