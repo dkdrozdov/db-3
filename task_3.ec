@@ -74,7 +74,7 @@ void query(){
                 "Error: %s\n%s\n", 
                 sqlca.sqlerrm.sqlerrmc,
                 "Couldn't get data.\nRollbacking transaction.");
-            exec close result_cursor;
+            exec SQL close result_cursor;
             exec SQL rollback work;
             return;
         }
