@@ -47,7 +47,7 @@ void query(){
 
     bool data_read = true;    // Получена ли хотя бы одна строка данных.
 
-    printf("%CODE: %ld\n", sqlca.sqlcode);
+    printf("CODE: %ld\n", sqlca.sqlcode);
 
 
     printf("Fetching...\n");
