@@ -45,7 +45,7 @@ void query(){
     printf("Cursor opened successfully.\n");
     printf("Successfully finished query!\nQuery results:\n");
 
-    bool data_read = true;    // Получена ли хотя бы одна строка данных.
+    bool data_read = false;    // Получена ли хотя бы одна строка данных.
 
     exec SQL fetch cursor1 into :n_post; // Извлечение данных из курсора.
 
