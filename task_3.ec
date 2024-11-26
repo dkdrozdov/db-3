@@ -18,8 +18,8 @@ void query(){
     exec SQL end declare section;
 
     // Начало транзакции.  
-    printf("Starting transaction.\n");
-    exec SQL begin work;
+    // printf("Starting transaction.\n");
+    // exec SQL begin work;
 
     // Выполнение запроса с объявлением курсора.
     printf("Trying to declare a cursor.\n");
