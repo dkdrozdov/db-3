@@ -42,7 +42,15 @@ void query(){
         select spj.amount kol
         from spj;
 
-    print_sqlca();
+    // Обработка ошибок при объявлении курсора.
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't declare cursor.\nRollbacking transaction.");
+        exec SQL rollback work;
+        return;
+    }
 
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
