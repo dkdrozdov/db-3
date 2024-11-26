@@ -11,7 +11,46 @@
  *          объем поставки, минимальный объем поставки красных 
  *          деталей поставщиком.
  */
-void query(){
+
+int main()
+{
+    //  Объявление собственных переменных.
+    EXEC SQL begin declare section;
+    char database_name[50] = "students";    // имя базы данных
+    char user_name[50] = "pmi-b1813";       // имя пользователя
+    char password[50] = "xdCz95b0/";        // пароль
+    EXEC SQL end declare section;
+
+    // Попытка подключения к базе данных.
+    printf("Trying to connect to database.\n");
+    EXEC SQL connect to :database_name user :user_name using :password;
+
+    // Обработка ошибок при подключении.
+    if (sqlca.sqlcode < 0)
+    {
+        fprintf(stderr, "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc, 
+            "Couldn't connect.");
+        exit(EXIT_FAILURE);
+    }
+    else
+        printf("Connected successfully!\n");
+
+    // Установка схемы.
+    printf("Setting database scheme search path.\n");
+    exec SQL set search_path to pmib1813;
+
+    // Обработка ошибок при установке схемы.
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc, 
+            "Couldn't set database scheme.");
+        exit(EXIT_FAILURE);
+    }
+
+    // Выполнение запроса.
+
+
     // Объявление собственных переменных.
     exec SQL begin declare section;
     char n_post[7];                 // Результат-номер поставщика.
@@ -97,46 +136,6 @@ void query(){
     // Завершение транзакции.
     printf("Committing transaction.\n");
     exec SQL commit work;
-}
-
-int main()
-{
-    //  Объявление собственных переменных.
-    EXEC SQL begin declare section;
-    char database_name[50] = "students";    // имя базы данных
-    char user_name[50] = "pmi-b1813";       // имя пользователя
-    char password[50] = "xdCz95b0/";        // пароль
-    EXEC SQL end declare section;
-
-    // Попытка подключения к базе данных.
-    printf("Trying to connect to database.\n");
-    EXEC SQL connect to :database_name user :user_name using :password;
-
-    // Обработка ошибок при подключении.
-    if (sqlca.sqlcode < 0)
-    {
-        fprintf(stderr, "Error: %s\n%s\n", 
-            sqlca.sqlerrm.sqlerrmc, 
-            "Couldn't connect.");
-        exit(EXIT_FAILURE);
-    }
-    else
-        printf("Connected successfully!\n");
-
-    // Установка схемы.
-    printf("Setting database scheme search path.\n");
-    exec SQL set search_path to pmib1813;
-
-    // Обработка ошибок при установке схемы.
-    if (sqlca.sqlcode < 0) {
-        fprintf(stderr, "Error: %s\n%s\n", 
-            sqlca.sqlerrm.sqlerrmc, 
-            "Couldn't set database scheme.");
-        exit(EXIT_FAILURE);
-    }
-
-    // Выполнение запроса.
-    query();
 
     // Отключение от базы данных.
     printf("Disconnecting from database.\n");
