@@ -16,11 +16,7 @@
 void query(){
     // Объявление собственных переменных.
     exec SQL begin declare section;
-    char n_post[7];                 // Результат-номер поставщика.
     int amount;                        // Результат-объем поставки.
-    int min_amount;                    // Результат-минимальный объем
-                                       // поставки красных деталей
-                                       // поставщиком.
     exec SQL end declare section;
 
     // Начало транзакции.  
