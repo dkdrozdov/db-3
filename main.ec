@@ -13,7 +13,7 @@ void task_1(){
     
     exec SQL select count(distinct spj.n_izd)
         into :count
-        from spj
+        from spj;
 
     if (sqlca.sqlcode < 0) {
         fprintf(stderr, "Error: %s\Couldn't execute request.\nRollbacking transaction.", sqlca.sqlerrm.sqlerrmc);
