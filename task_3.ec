@@ -27,12 +27,21 @@ void query(){
     printf("Starting transaction.\n");
     exec SQL begin work;
 
+    // Обработка ошибок при начале транзакции.
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't begin transaction.\nRollbacking transaction.");
+        exec SQL rollback work;
+        return;
+    }
+
     // Выполнение запроса с объявлением курсора.
     printf("Trying to declare a cursor.\n");
     exec SQL declare result_cursor cursor for
         select spj.amount
         from spj;
-
 
     // Обработка ошибок при совершении запроса.
     if (sqlca.sqlcode < 0) {
