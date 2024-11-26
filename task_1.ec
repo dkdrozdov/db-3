@@ -9,7 +9,7 @@
  *          изделий, собираемых в городе, где производят красные 
  *          детали.
  */
-void task_1(){
+void query(){
     // Объявление собственных переменных.
     exec SQL begin declare section;
     int count;                          // Число-результат запроса.
@@ -51,38 +51,6 @@ void task_1(){
     exec SQL commit work;
 }
 
-void menu(){
-    int option = 0;
-    
-    printf("Choose the task number (1-5): ");
-
-    // Чтение номера задания.
-    if(scanf("%d", &option) == 1 && option <= 5 && option >= 1){
-        printf("Task %d is chosen.\n", option);
-    }
-
-    // Переход на выбранное задание.
-    switch(option){
-        case 1:
-            task_1();
-            break;
-        case 2:
-            task_1();
-            break;
-        case 3:
-            task_1();
-            break;
-        case 4:
-            task_1();
-            break;
-        case 5:
-            task_1();
-            break;
-        default:
-            printf("This task doesn't exist.\n");
-    }
-}
-
 int main()
 {
     //  Объявление собственных переменных.
@@ -119,8 +87,8 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    // Меню программы.
-    menu();
+    // Выполнение запроса.
+    query();
 
     // Отключение от базы данных.
     printf("Disconnecting from database.\n");
