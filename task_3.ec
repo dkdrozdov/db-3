@@ -79,7 +79,7 @@ void query() {
         exec SQL fetch cursor3 INTO :n_izd, :pves, :mves;
 
         /* Проверка на конец выборки */
-        if (sqlca.sqlcode == SQLFOUND) break;
+        if (sqlca.sqlcode == 100) break;
 
         /* Проверка на ошибку извлечения данных */
         if (sqlca.sqlcode < 0) {
