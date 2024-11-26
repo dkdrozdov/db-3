@@ -19,6 +19,16 @@ void query(){
     printf("Starting transaction.\n");
     exec SQL begin work;
 
+    // Обработка ошибок при начале транзакции.
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't begin transaction.\nRollbacking transaction.");
+        exec SQL rollback work;
+        return;
+    }
+
     // Выполнение запроса.
     exec SQL select count(distinct spj.n_post)
     into :count
