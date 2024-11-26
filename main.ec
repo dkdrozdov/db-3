@@ -7,11 +7,17 @@
 //
 //}
 
+EXEC SQL begin declare section;
+char database_name[50] = "students";
+char user_name[50] = "pmi-b1813";
+char password[50] = "xdCz95b0/";
+EXEC SQL end declare section;
+
 enum success_code{
     SUCCESS, FAILURE
 }
 
-int connect(char *database_name, char *user_name, char *password){
+int connect(){
     int success = SUCCESS;
 
     printf("Trying to connect to database.\n");
@@ -34,13 +40,7 @@ int disconnect(){
 
 int main()
 {
-    EXEC SQL begin declare section;
-    char database_name[50] = "students";
-    char user_name[50] = "pmi-b1813";
-    char password[50] = "xdCz95b0/";
-    EXEC SQL end declare section;
-
-    if(connect(database_name, user_name, password)!=SUCCESS)
+    if(connect()!=SUCCESS)
         exit(EXIT_FAILURE);
 
     printf("Disconnecting from database.\n");
