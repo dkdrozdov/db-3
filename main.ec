@@ -8,7 +8,7 @@ void task_1(){
     int count;
     exec SQL end declare section;
     
-    printf("Starting transaction.\n")
+    printf("Starting transaction.\n");
     exec SQL begin work;
     
     exec SQL select count(distinct spj.n_izd)
