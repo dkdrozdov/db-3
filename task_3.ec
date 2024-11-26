@@ -47,7 +47,6 @@ void query(){
 
     bool data_read = true;    // Получена ли хотя бы одна строка данных.
 
-    printf("Fetching...\n");
     exec SQL fetch cursor1 into :n_post; // Извлечение данных из курсора.
 
     while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
@@ -70,7 +69,6 @@ void query(){
         // Вывод данных
         printf("| %-9s |\n", n_post);
 
-        printf("Fetching...\n");
         exec SQL fetch cursor1 into :n_post;  // Извлечение данных из курсора.
     }
 
