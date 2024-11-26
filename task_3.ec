@@ -14,7 +14,7 @@
 void query(){
     // Объявление собственных переменных.
     exec SQL begin declare section;
-    int amount;
+    int kol;
     exec SQL end declare section;
 
     // Начало транзакции.  
@@ -24,7 +24,7 @@ void query(){
     // Выполнение запроса с объявлением курсора.
     printf("Trying to declare a cursor.\n");
     exec SQL declare cursor1 cursor for
-        select spj.amount
+        select spj.kol
         from spj;
         
     if (sqlca.sqlcode < 0) {
@@ -56,7 +56,7 @@ void query(){
 
     bool data_read = false;    // Получена ли хотя бы одна строка данных.
 
-    exec SQL fetch cursor1 into :amount; // Извлечение данных из курсора.
+    exec SQL fetch cursor1 into :kol; // Извлечение данных из курсора.
 
     while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
     {
@@ -72,13 +72,13 @@ void query(){
         }
 
         // Вывод заголовка таблицы.
-        if(!data_read) printf("| %-9s |\n", "amount");
+        if(!data_read) printf("| %-9s |\n", "kol");
         data_read = true;
 
         // Вывод данных
-        printf("| %-9s |\n", amount);
+        printf("| %-9s |\n", kol);
 
-        exec SQL fetch cursor1 into :amount;  // Извлечение данных из курсора.
+        exec SQL fetch cursor1 into :kol;  // Извлечение данных из курсора.
     }
 
     // Сообщение о пустом результате.
