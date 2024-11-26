@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define SQLFOUND = 100;
+#define SQLFOUND 100;
 
 /*      Задание 3. 
  *      Выполнить запрос:
