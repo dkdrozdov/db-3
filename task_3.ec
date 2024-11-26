@@ -27,6 +27,8 @@ void query(){
         select spj.amount kol
         from spj;
 
+    printf("CODE: %ld\n", sqlca.sqlcode);
+    
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
     exec SQL open cursor1;
@@ -47,7 +49,6 @@ void query(){
 
     bool data_read = true;    // Получена ли хотя бы одна строка данных.
 
-    printf("CODE: %ld\n", sqlca.sqlcode);
 
 
     printf("Fetching...\n");
