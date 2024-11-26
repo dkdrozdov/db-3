@@ -16,7 +16,7 @@ int main()
     strcpy(password, "xdCz95b0/");
 
     printf("Trying to connect to database.\n");
-    EXEC SQL connect to : name_of_bd user : user using : password;
+    EXEC SQL connect to : database_name user_name : user_name using : password;
 
     if (sqlca.sqlcode < 0)
         Err(sqlca.sqlerrm.sqlerrmc, "Couldn't connect.", true);
