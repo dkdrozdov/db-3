@@ -17,8 +17,9 @@ void task_1(){
 
     if (sqlca.sqlcode < 0) {
         fprintf(stderr, 
-            "Error: %s\nCouldn't execute request.\nRollbacking transaction.\n", 
-            sqlca.sqlerrm.sqlerrmc);
+            "Error: %s\s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't execute request.\nRollbacking transaction.");
         exec SQL rollback work;
         return;
     }
@@ -32,7 +33,7 @@ void menu(){
 
     int option = 0;
     if(scanf("%d", &option) == 1 && option <= 5 && option >= 1){
-        printf("Task %d is chosen.\n");
+        printf("Task %d is chosen.\n", option);
     }
 
     switch(option){
@@ -73,11 +74,23 @@ int main()
 
     if (sqlca.sqlcode < 0)
     {
-        fprintf(stderr, "Error: %s\n%s", sqlca.sqlerrm.sqlerrmc, "Couldn't connect.");
+        fprintf(stderr, "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc, 
+            "Couldn't connect.");
         exit(EXIT_FAILURE);
     }
     else
         printf("Connected successfully!\n");
+
+    printf("Setting database scheme search path.\n");
+    exec SQL set search_path to pmib1813;
+
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc, 
+            "Couldn't set database scheme.");
+        exit(EXIT_FAILURE);
+    }
 
     menu();
 
@@ -85,7 +98,9 @@ int main()
     exec SQL disconnect;
 
     if (sqlca.sqlcode < 0){
-        fprintf(stderr, "Error: %s\n%s", sqlca.sqlerrm.sqlerrmc, "Couldn't disconnect.");
+        fprintf(stderr, "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc, 
+            "Couldn't disconnect.");
         exit(EXIT_FAILURE);
         }
     else
