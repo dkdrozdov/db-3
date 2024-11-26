@@ -26,6 +26,15 @@ void query(){
     exec SQL declare cursor1 cursor for
         select spj.n_post
         from spj;
+        
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't open cursor.\nRollbacking transaction.");
+        exec SQL rollback work;
+        return;
+    }
 
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
