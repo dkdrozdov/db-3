@@ -29,13 +29,13 @@ void query(){
 
     // Выполнение запроса с объявлением курсора.
     printf("Trying to declare a cursor.\n");
-    exec SQL declare result_cursor cursor for
+    exec SQL declare cursor1 cursor for
         select spj.amount
         from spj;
 
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
-    exec SQL open result_cursor;
+    exec SQL open cursor1;
 
     // Обработка ошибок при открытии курсора.
     if (sqlca.sqlcode < 0) {
@@ -53,7 +53,7 @@ void query(){
 
     bool data_read = true;    // Получена ли хотя бы одна строка данных.
 
-    exec SQL fetch result_cursor INTO :amount; // Извлечение данных из курсора.
+    exec SQL fetch cursor1 into :amount; // Извлечение данных из курсора.
 
     while(sqlca.sqlcode != SQLFOUND) // Проверка на достижение конца выборки.
     {
@@ -63,7 +63,7 @@ void query(){
                 "Error: %s\n%s\n", 
                 sqlca.sqlerrm.sqlerrmc,
                 "Couldn't get data.\nRollbacking transaction.");
-            exec SQL close result_cursor;
+            exec SQL close cursor1;
             exec SQL rollback work;
             return;
         }
@@ -75,14 +75,14 @@ void query(){
         // Вывод данных
         printf("| %-9s |\n", amount);
 
-        exec SQL fetch result_cursor into :amount;  // Извлечение данных из курсора.
+        exec SQL fetch cursor1 into :amount;  // Извлечение данных из курсора.
     }
 
     // Сообщение о пустом результате.
     if(!data_read) printf("No rows found.\n");
 
     // Закрытие курсора.
-    exec SQL close result_cursor;
+    exec SQL close cursor1;
 
     // Обработка ошибок при закрытии курсора.
     if (sqlca.sqlcode < 0) {
@@ -151,4 +151,6 @@ int main()
         }
     else
         printf("Disconnected successfully.\n");
+
+    return EXIT_SUCCESS;
 }
