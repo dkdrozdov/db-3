@@ -29,7 +29,7 @@ void print_sqlca()
 void query(){
     // Объявление собственных переменных.
     exec SQL begin declare section;
-    int kol;
+    char n_izd[7];
     exec SQL end declare section;
 
     // Начало транзакции.  
@@ -39,7 +39,7 @@ void query(){
     // Выполнение запроса с объявлением курсора.
     printf("Trying to declare a cursor.\n");
     exec SQL declare cursor1 cursor for
-        select spj.amount kol
+        select spj.n_izd
         from spj;
 
     // Обработка ошибок при объявлении курсора.
@@ -75,7 +75,7 @@ void query(){
 
 
     printf("Fetching...\n");
-    exec SQL fetch cursor1 into :kol; // Извлечение данных из курсора.
+    exec SQL fetch cursor1 into :n_izd; // Извлечение данных из курсора.
 
     while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
     {
@@ -91,14 +91,14 @@ void query(){
         }
 
         // Вывод заголовка таблицы.
-        if(!data_read) printf("| %-9s |\n", "kol");
+        if(!data_read) printf("| %-9s |\n", "n_izd");
         data_read = true;
 
         // Вывод данных
-        printf("| %-9s |\n", kol);
+        printf("| %-9s |\n", n_izd);
 
         printf("Fetching...\n");
-        exec SQL fetch cursor1 into :kol;  // Извлечение данных из курсора.
+        exec SQL fetch cursor1 into :n_izd;  // Извлечение данных из курсора.
     }
 
     // Сообщение о пустом результате.
