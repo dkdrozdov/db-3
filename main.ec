@@ -17,7 +17,7 @@ void task_1(){
 
     if (sqlca.sqlcode < 0) {
         fprintf(stderr, 
-            "Error: %s\s\n", 
+            "Error: %s\n%s\n", 
             sqlca.sqlerrm.sqlerrmc,
             "Couldn't execute request.\nRollbacking transaction.");
         exec SQL rollback work;
