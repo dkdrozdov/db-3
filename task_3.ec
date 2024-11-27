@@ -35,15 +35,6 @@ void query(){
                 where p.cvet='Красный'
                 group by spj.n_post) t on t.n_post=spj1.n_post
         where spj1.kol < mkol
-        
-    if (sqlca.sqlcode < 0) {
-        fprintf(stderr, 
-            "Error: %s\n%s\n", 
-            sqlca.sqlerrm.sqlerrmc,
-            "Couldn't open cursor.\nRollbacking transaction.");
-        exec SQL rollback work;
-        return;
-    }
 
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
