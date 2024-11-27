@@ -34,7 +34,7 @@ void query(){
                 join p on spj.n_det=p.n_det
                 where p.cvet='Красный'
                 group by spj.n_post) t on t.n_post=spj1.n_post
-        where spj1.kol < mkol
+        where spj1.kol < mkol;
 
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
