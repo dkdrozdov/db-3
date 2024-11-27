@@ -14,7 +14,9 @@
 void query(){
     // Объявление собственных переменных.
     exec SQL begin declare section;
-    int kol;
+    char n_post[7];
+    int amount;
+    int mkol;
     exec SQL end declare section;
 
     // Начало транзакции.      
@@ -25,8 +27,14 @@ void query(){
     // Выполнение запроса с объявлением курсора.
     printf("Trying to declare a cursor.\n");
     exec SQL declare cursor1 cursor for
-        select spj.kol
-        from spj;
+        select spj1.n_post, spj1.kol amount, mkol
+        from spj spj1
+        join (select spj.n_post, min(spj.kol) mkol
+                from spj
+                join p on spj.n_det=p.n_det
+                where p.cvet='Красный'
+                group by spj.n_post) t on t.n_post=spj1.n_post
+        where spj1.kol < mkol
         
     if (sqlca.sqlcode < 0) {
         fprintf(stderr, 
@@ -57,7 +65,7 @@ void query(){
 
     bool data_read = false;    // Получена ли хотя бы одна строка данных.
 
-    exec SQL fetch cursor1 into :kol; // Извлечение данных из курсора.
+    exec SQL fetch cursor1 into :n_post, :amount, :mkol; // Извлечение данных из курсора.
 
     while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
     {
@@ -73,13 +81,13 @@ void query(){
         }
 
         // Вывод заголовка таблицы.
-        if(!data_read) printf("| %-9s |\n", "kol");
+        if(!data_read) printf("| %-9s | %-9s | %-9s |\n", "n_post", "amount", "mkol");
         data_read = true;
 
         // Вывод данных
-        printf("| %-9s |\n", kol);
+        printf("| %-9s | %-9d | %-9d |\n", n_post, amount, mkol);
 
-        exec SQL fetch cursor1 into :kol;  // Извлечение данных из курсора.
+        exec SQL fetch cursor1 into :n_post, :amount, :mkol; // Извлечение данных из курсора.
     }
 
     // Сообщение о пустом результате.
