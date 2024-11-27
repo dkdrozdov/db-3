@@ -75,7 +75,7 @@ void query(){
         data_read = true;
 
         // Вывод данных
-        printf("| %-10s | %-21s | %-21s |\n", n_izd, name, town);
+        printf("| %10s | %21s | %21s |\n", n_izd, name, town);
 
         exec SQL fetch cursor1 into :n_izd, :name, :town; // Извлечение данных из курсора.
     }
