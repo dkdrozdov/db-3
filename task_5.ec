@@ -74,11 +74,11 @@ void query(){
         }
 
         // Вывод заголовка таблицы.
-        if(!data_read) printf("| %-10s | %-20s | %-20s |\n", "n_izd", "name", "town");
+        if(!data_read) printf("| %-10s | %-15s | %-15s |\n", "n_izd", "name", "town");
         data_read = true;
 
         // Вывод данных
-        printf("| %-10s | %-20s | %-20s |\n", n_izd, name, town);
+        printf("| %-10s | %-15s | %-15s |\n", n_izd, name, town);
 
         exec SQL fetch cursor1 into :n_izd, :name, :town; // Извлечение данных из курсора.
     }
