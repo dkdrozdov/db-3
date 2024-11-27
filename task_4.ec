@@ -32,7 +32,7 @@ void query(){
         from spj spj2
         where spj2.n_post IN(select distinct spj1.n_post
                                 from spj spj1
-                                where spj1.n_izd='J3')
+                                where spj1.n_izd='J3');
 
     // Открытие курсора.
     printf("Cursor declared successfully.\nTrying to open cursor.\n");
