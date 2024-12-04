@@ -15,7 +15,7 @@ void query(){
     exec SQL begin work;
 
     // Выполнение запроса.
-    exec SQL update j
+    exec SQL 
         UPDATE j
         SET name = 'Лента'
         WHERE n_izd = 'J2';

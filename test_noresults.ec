@@ -3,49 +3,99 @@
 #include <string.h>
 #include <stdbool.h>
 
-/*      Задание 1. 
+/*      Задание 3. 
  *      Выполнить запрос:
- *          Выдать число поставщиков, поставлявших детали для 
- *          изделий, собираемых в городе, где производят красные 
- *          детали.
+ *          Найти поставщиков, имеющих поставки, объем которых 
+ *          меньше объема наименьшей поставки красных деталей,       
+ *          сделанной этим поставщиком. Вывести номер поставщика,       
+ *          объем поставки, минимальный объем поставки красных 
+ *          деталей поставщиком.
  */
 void query(){
     // Объявление собственных переменных.
     exec SQL begin declare section;
-    int count;                          // Число-результат запроса.
+    char n_post[7];
+    int amount;
+    int mkol;
     exec SQL end declare section;
 
-    // Начало транзакции.  
-    printf("Starting transaction.\n");
+    // Начало транзакции.      
     exec SQL begin work;
+    // printf("Starting transaction.\n");
+    // exec SQL begin work;
 
-    // Выполнение запроса.
-    exec SQL select count(distinct spj.n_post)
-    into :count
-    from spj
-    where spj.n_izd in
-        (select j.n_izd
-        from j
-        where town in
-            (select p.town
-            from p
-            where cvet='Красный'
-            and cvet='Нету'));
+    // Выполнение запроса с объявлением курсора.
+    printf("Trying to declare a cursor.\n");
+    exec SQL declare cursor1 cursor for
+        select spj1.n_post, spj1.kol amount, mkol
+        from spj spj1
+        join (select spj.n_post, min(spj.kol) mkol
+                from spj
+                join p on spj.n_det=p.n_det
+                where p.cvet='Красный'
+                group by spj.n_post) t on t.n_post=spj1.n_post
+        where spj1.kol < mkol and spj1.kol=-1;
 
-    // Обработка ошибок при совершении запроса.
+    // Открытие курсора.
+    printf("Cursor declared successfully.\nTrying to open cursor.\n");
+    exec SQL open cursor1;
+
+    // Обработка ошибок при открытии курсора.
     if (sqlca.sqlcode < 0) {
         fprintf(stderr, 
             "Error: %s\n%s\n", 
             sqlca.sqlerrm.sqlerrmc,
-            "Couldn't execute query.\nRollbacking transaction.");
+            "Couldn't open cursor.\nRollbacking transaction.");
         exec SQL rollback work;
         return;
     }
 
     // Вывод результата.
-    printf("Successfully finished query! Query results:\n");
-    printf("| %-9s |\n", "count");
-    printf("| %-9d |\n", count);
+    printf("Cursor opened successfully.\n");
+    printf("Successfully finished query!\nQuery results:\n");
+
+    bool data_read = false;    // Получена ли хотя бы одна строка данных.
+
+    exec SQL fetch cursor1 into :n_post, :amount, :mkol; // Извлечение данных из курсора.
+
+    while(sqlca.sqlcode != 100) // Проверка на достижение конца выборки.
+    {
+        // Обработка ошибок при открытии курсора.
+        if (sqlca.sqlcode < 0) {
+            fprintf(stderr, 
+                "Error: %s\n%s\n", 
+                sqlca.sqlerrm.sqlerrmc,
+                "Couldn't get data.\nRollbacking transaction.");
+            exec SQL close cursor1;
+            exec SQL rollback work;
+            return;
+        }
+
+        // Вывод заголовка таблицы.
+        if(!data_read) printf("| %-9s | %-9s | %-9s |\n", "n_post", "amount", "mkol");
+        data_read = true;
+
+        // Вывод данных
+        printf("| %-9s | %-9d | %-9d |\n", n_post, amount, mkol);
+
+        exec SQL fetch cursor1 into :n_post, :amount, :mkol; // Извлечение данных из курсора.
+    }
+
+    // Сообщение о пустом результате.
+    if(!data_read) printf("No rows found.\n");
+
+    // Закрытие курсора.
+    exec SQL close cursor1;
+
+    // Обработка ошибок при закрытии курсора.
+    if (sqlca.sqlcode < 0) {
+        fprintf(stderr, 
+            "Error: %s\n%s\n", 
+            sqlca.sqlerrm.sqlerrmc,
+            "Couldn't close cursor.\nRollbacking transaction.");
+        exec SQL rollback work;
+        return;
+    }
 
     // Завершение транзакции.
     printf("Committing transaction.\n");
@@ -104,4 +154,6 @@ int main()
         }
     else
         printf("Disconnected successfully.\n");
+
+    return EXIT_SUCCESS;
 }
